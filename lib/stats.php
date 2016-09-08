@@ -30,6 +30,38 @@ class EXCTA_Stats
 	public function init() {
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
 		add_filter( 'example_cta_html_display', array( $this, 'record_stats' ), 10, 2 );
+
+		add_action( 'rest_api_init', array( $this, 'register_routes' ), 10, 2 );
+	}
+
+	public function register_routes() {
+		$version = '1';
+		$namespace = 'examplecta/v' . $version;
+		$base = 'stats';
+		register_rest_route( $namespace, '/' . $base, array(
+			array(
+				'methods'         => WP_REST_Server::READABLE,
+				'callback'        => array( $this, 'get_stats_endpoint' ),
+				'permission_callback' => array( $this, 'get_stats_permissions_check' ),
+				'args'            => array(
+					'detailed' => array(
+						'required' => false,
+					),
+				),
+			),
+		) );
+	}
+
+	public function get_stats_permissions_check() {
+		return true; // Publicly available (even to logged out users)
+	}
+
+	public function get_stats_endpoint( $request ) {
+		$params = $request->get_params();
+
+		$stats = $this->get_stats();
+
+		return $stats;
 	}
 
 	/**
