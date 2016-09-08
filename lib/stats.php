@@ -77,6 +77,10 @@ class EXCTA_Stats
 
 		// Make sure we use our defaults if any values aren't set already
 		$stats = array_merge( $this->default_stats, $stats );
+
+		// Simulate a heavy/slow query
+		sleep(3);
+
 		return $stats;
 	}
 
