@@ -28,6 +28,7 @@ class EXCTA_Stats
 	 * @return void
 	 */
 	public function init() {
+		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
 		add_filter( 'example_cta_html_display', array( $this, 'record_stats' ), 10, 2 );
 	}
 
@@ -78,6 +79,38 @@ class EXCTA_Stats
 
 		// Since this is a filter, we want to return the original value unmodified
 		return $build;
+	}
+
+	public function add_dashboard_widgets() {
+		wp_add_dashboard_widget(
+			'example_cta_stats',         // Widget slug.
+			'Example CTA Stats',         // Title.
+			array( $this, 'display_dashboard_widget' ) // Display function.
+		);	
+	}
+
+	public function display_dashboard_widget() {
+		$stats = $this->get_stats();
+
+		echo "<table>";
+			echo "<tbody>";
+				foreach ($stats as $stat_key => $stat_value) {
+					echo "<tr style='padding: 8px 4px;'>";
+						echo "<th style='text-align: right;'>";
+							echo $stat_key;
+						echo "</th>";
+
+						echo "<td style='text-align: left;'>";
+							if ( is_array( $stat_value ) ) {
+								echo '<pre>'.print_r($stat_value, true).'</pre>';
+							} else {
+								echo $stat_value;
+							}
+						echo "</td>";
+					echo "</tr>";
+				}
+			echo "</tbody>";
+		echo "</table>";
 	}
 
 	// End the class.
