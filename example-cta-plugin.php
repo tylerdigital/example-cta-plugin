@@ -73,6 +73,9 @@ class Example_CTA_Core
 
 		// Load our helper file.
 		require_once( EXM_CTA_DIR . 'lib/helper.php' );
+
+		// Load our stats file.
+		require_once( EXM_CTA_DIR . 'lib/stats.php' );
 	}
 
 	// End the class.
