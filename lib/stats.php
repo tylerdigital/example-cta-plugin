@@ -32,17 +32,27 @@ class EXCTA_Stats
 	}
 
 	/**
+	 * Get current stats from database
+	 *
+	 * @return void
+	 */
+	public function get_stats() {
+		// Get our option from the database, or use an empty array if it isn't found in the database
+		$stats = get_option( 'example_cta_stats', array() );
+
+		// Make sure we use our defaults if any values aren't set already
+		$stats = array_merge( $this->default_stats, $stats );
+		return $stats;
+	}
+
+	/**
 	 * Record some stats each time CTA is displayed
 	 *
 	 * @return void
 	 */
 	public function record_stats( $build, $post_id ) {
-		// Load the current stats (using defaults if values aren't present)
-		$stats = get_option( 'example_cta_stats' );
-		if ( empty( $stats ) ) {
-			$stats = array();
-		}
-		$stats = array_merge( $this->default_stats, $stats );
+		// Load the current stats
+		$stats = $this->get_stats();
 
 		// Record stats
 		$stats['total']++;
