@@ -32,6 +32,8 @@ class EXCTA_Stats
 		add_filter( 'example_cta_html_display', array( $this, 'record_stats' ), 10, 2 );
 
 		add_action( 'rest_api_init', array( $this, 'register_routes' ), 10, 2 );
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'load_stats_javascript' ) );
 	}
 
 	public function register_routes() {
@@ -144,6 +146,36 @@ class EXCTA_Stats
 			echo "</tbody>";
 		echo "</table>";
 	}
+
+	/**
+	 * Load our stats javascript
+	 *
+	 * @param  string $hook  The admin page hook being called.
+	 *
+	 * @return void
+	 */
+	public function load_stats_javascript( $hook ) {
+		// Only load on the main admin dashboard
+		if ( ! in_array( $hook, array( 'index.php' ) ) ) {
+			return;
+		}
+
+		// Set a suffix for loading the minified or normal.
+		$sx = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.js' : '.min.js';
+		$vs = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : EXM_CTA_VER;
+
+		// Register only (we need to register it before enqueuing, so we can pass custom variables to our script)
+		wp_register_script( 'example-cta-stats', plugins_url( '/js/examplecta.stats' . $sx, __FILE__ ), array( 'jquery' ), $vs, true );
+
+		// Pass some custom variables from PHP to a javascript object so we can reference them in stats JS
+		wp_localize_script( 'example-cta-stats', 'exampleCtaVars', array(
+			'apiBaseUrl' => site_url( rest_get_url_prefix() ), // in case this site isn't using the default /wp-json/ URL structure
+		) );
+
+		// Actually enqueue the script
+		wp_enqueue_script( 'example-cta-stats' );
+	}
+
 
 	// End the class.
 }
