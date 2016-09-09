@@ -19,7 +19,6 @@ class EXCTA_Stats
 		'logged_out' => 0,
 		'mobile' => 0,
 		'desktop' => 0,
-		'total_by_post_id' => array(),
 	);
 
 	/**
