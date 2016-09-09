@@ -128,9 +128,9 @@ class EXCTA_Stats
 	}
 
 	public function display_dashboard_widget() {
-		$stats = $this->get_stats();
+		$stats = $this->default_stats;
 
-		echo "<table>";
+		echo "<table class='example-cta-stats'>";
 			echo "<tbody>";
 				foreach ($stats as $stat_key => $stat_value) {
 					echo "<tr style='padding: 8px 4px;'>";
@@ -138,12 +138,8 @@ class EXCTA_Stats
 							echo $stat_key;
 						echo "</th>";
 
-						echo "<td style='text-align: left;'>";
-							if ( is_array( $stat_value ) ) {
-								echo '<pre>'.print_r($stat_value, true).'</pre>';
-							} else {
-								echo $stat_value;
-							}
+						echo "<td style='text-align: left;' class='".$stat_key."'>";
+								echo "Loading...";
 						echo "</td>";
 					echo "</tr>";
 				}
