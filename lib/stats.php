@@ -54,7 +54,13 @@ class EXCTA_Stats
 	}
 
 	public function get_stats_permissions_check() {
-		return true; // Publicly available (even to logged out users)
+		if ( current_user_can( 'manage_options' ) ) {
+			// Let administrators see this endpoints
+			return true;
+		} else {
+			// All other users are not given access to this API endpoint
+			return false;
+		}
 	}
 
 	public function get_stats_endpoint( $request ) {
@@ -172,6 +178,7 @@ class EXCTA_Stats
 		// Pass some custom variables from PHP to a javascript object so we can reference them in stats JS
 		wp_localize_script( 'example-cta-stats', 'exampleCtaVars', array(
 			'apiBaseUrl' => site_url( rest_get_url_prefix() ), // in case this site isn't using the default /wp-json/ URL structure
+			'nonce' => wp_create_nonce( 'wp_rest' ),
 		) );
 
 		// Actually enqueue the script
