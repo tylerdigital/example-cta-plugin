@@ -144,6 +144,7 @@ class EXCTA_Stats
 				}
 			echo "</tbody>";
 		echo "</table>";
+		echo '<canvas id="examplectaStats" width="400" height="400"></canvas>';
 	}
 
 	/**
@@ -158,6 +159,8 @@ class EXCTA_Stats
 		if ( ! in_array( $hook, array( 'index.php' ) ) ) {
 			return;
 		}
+
+		wp_enqueue_script( 'chartjs', plugins_url( '/js/Chart.bundle.min.js', __FILE__ ), array(), null, true );
 
 		// Set a suffix for loading the minified or normal.
 		$sx = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.js' : '.min.js';
