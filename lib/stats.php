@@ -77,6 +77,10 @@ class EXCTA_Stats
 	 * @return void
 	 */
 	public function get_stats() {
+		if ( $stats = get_transient( 'example_cta_stats' ) ) {
+			return $stats;
+		}
+
 		// Get our option from the database, or use an empty array if it isn't found in the database
 		$stats = get_option( 'example_cta_stats', array() );
 
@@ -85,6 +89,8 @@ class EXCTA_Stats
 
 		// Simulate a heavy/slow query
 		sleep(3);
+
+		set_transient( 'example_cta_stats', $stats, 30 );
 
 		return $stats;
 	}
